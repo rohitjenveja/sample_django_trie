@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>VSN Lookup</title>
+
+    <style type="text/css">
+      .error {
+              color: #D8000C;
+              background-color: #FFBABA;
+              display: {{server_side_display_error}};
+      }
+    </style>
+
+    <script type="text/javascript">
+      function validateVsn() {
+        var vsn = document.forms["vsnForm"]["q"].value;
+        // Javascript can easily be disabled.
+        // Validation is done both on client and server-side.
+        var re = /^[A-Z*]{6}[0-9*]{6}$/;
+        if (re.test(vsn) == false) {
+          document.getElementById("error").style.display = "block";
+          document.getElementById("results").innerHTML= "";
+          document.getElementById("error").innerHTML = vsn + " is not a valid VSN";
+          return false;
+        } else {
+          document.getElementById("error").innerHTML = "none";
+          return true;
+
+        }
+      }
+    </script>
+  </head>
+  <body>
+
+    <noscript>
+      <style type="text/css">
+        .pagecontainer {display:none;}
+      </style>
+      <div class="noscriptmsg">
+        You don't have javascript enabled.  Validation will only happen on server-side.
+      </div>
+    </noscript>
+
+    <div id="error" class="error">
+       {{server_side_error}}
+    </div>
+
+    <div id="search">
+       <form name="vsnForm" method="GET" action="/" onsubmit="return validateVsn()">
+        <input id="search" type="text" name="q">
+        <input type="submit" value="search">
+      </form>
+    </div>
+
+    <div id="results">
+      {% if no_results %}
+        <b> No results found</b>
+      {% endif %}
+      <table>
+        <tr>
+          <td>{{serial}}</td>
+          <td>{{vehicle}}</td>
+          <td>{{year}}</td>
+          <td>{{make}}</td>
+          <td>{{model}}</td>
+          <td>{{trim}}</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
