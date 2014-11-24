@@ -1,29 +1,13 @@
-The current trie can handle ~10 million VSNs on a powerful machine.
+This trie implementation is unique because the source data, a CSV, has 
+data which can contains wildcards for a field called VSN. 
+
+Example VSN: AAA*AA123456
+
+The user will search based upon a complete VSN (i.e. AAAAAA123456 etc.,) 
+and then I retrive the  result that matches and contains the fewest 
+wildcards.
+
+The current trie can handle ~10 million VSNs on a decent macbook pro.
 For reference, on my MBP, it took about 1.5 minutes to create a trie with ten
 million results (see load_test.py to test it out). Lookups were very fast
-after it had been created.
-
-If we wanted to handle billions of VSNs, I would try to distribute potential VSNs
-across many machines, based on a hash.
-
-A simple example -- look at the first four letters of the VSN to determine which
-cluster to route to. In the event of wildcard(s) in the first four letters,
-store the data in multiple clusters that it may be eligible for.
-
-When the user searches with a fully valid VSN, the hash would determine which
-cluster to go to.
-
-Each cluster could have one or more trie(s) that are checked to determine
-the fewest wildcards.
-
-The downside to this approach is that you would need to redistribute results
-if you add new machines or change your hash.
-
-2.) Pre-compute possible solutions in a distributed hash. Send an RPC call to
-see which machines have the pre-computed results. The downside to this approach
-is that you can have tens of billions of potential VSNs.
-
-I would do this if there was a practical limit on number of wildcards on VSN.
-
-It is relatively inexpensive to precompute possible solutions for a result
-containing only a few wildcards but quickly becomes expensive.
+after the trie had been created.
